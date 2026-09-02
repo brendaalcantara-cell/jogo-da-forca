@@ -1,0 +1,48 @@
+import importlib.machinery
+from pathlib import Path
+
+
+pasta_projeto = Path(__file__).parent
+jogodaforca = importlib.machinery.SourceFileLoader(
+    "jogodaforca", str(pasta_projeto / "jogodaforca.py")
+).load_module()
+jogodaadivinhacao = importlib.machinery.SourceFileLoader(
+    "jogodaadivinhacao", str(pasta_projeto / "jogodaadivinhacao")
+).load_module()
+
+def escolherjogo():
+    while True:
+        print("──────▄▌▐▀▀▀▀▀▀▀▀▀▀▀▀▀▌")
+        print("───▄▄██▌█░░░░MENU ░░░░▌.")
+        print("▄▄▄▌▐██▌█░░░░ DE ░░░░▌.")
+        print("███████▌█▄▄▄▄JOGO▄▄▄▄▄▄▌")
+        print("▀❍▀▀▀▀▀▀▀❍❍▀▀▀▀▀▀❍❍▀")
+        print("Escolha o jogo que deseja jogar:")
+        print("[1] - Jogo da Forca")
+        print("[2] - jogo de Adivinhação")
+        print("[3] - Sair")
+
+        try:
+            jogo = int(input("Qual jogo você deseja jogar? "))
+            match jogo:
+                case 1:
+                    print("Jogando Jogo da Forca")
+                    jogodaforca.jogar()
+                    print("\n")
+                case 2:
+                    print("Jogando Jogo de Adivinhação")
+                    jogodaadivinhacao.jogar()
+                    print("\n")
+                case 3:
+                    print("Obrigado por jogar! Até logo!")
+                    break
+                case _:
+                    print("Opção inválida. Tente novamente.")
+        except ValueError:
+            print("Digite um número válido.")
+        except EOFError:
+            print("\nObrigado por jogar! Até logo!")
+            break
+
+if __name__ == "__main__":
+    escolherjogo()

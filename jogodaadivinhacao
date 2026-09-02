@@ -1,0 +1,63 @@
+import random
+def jogar():
+    # Boa vindas ao jogo de adivinhação
+    print("********************************")
+    print("Bem vindo ao jogo de Adivinhação")
+    print("********************************")
+
+    # geração de numero aleatório entre 1 e 50
+    numerosecreto = random.randrange(1, 51)
+    totaldetentativas = 0
+    pontos = 0
+
+    # informando o nível de dificuldade do jogo
+    print("Qual nível de dificuldade voce vai escolher?")
+    print("(1) Fácil (2) Médio (3) Difícil")
+    nivel = int(input("Escolha o nível: "))
+
+    if(nivel == 1):
+        totaldetentativas = 20
+        pontos = 200
+    elif(nivel == 2):
+        totaldetentativas = 10
+        pontos = 100
+    else:
+        totaldetentativas = 5
+        pontos = 50
+
+    # loop para o jogador chutar o número secreto
+    while totaldetentativas > 0:
+        print("Você tem ", totaldetentativas, " tentativas")  
+       
+        try:
+            chute = input("Digite o seu número: ")
+        except EOFError:
+            print("\nJogo interrompido.")
+            break
+        print("Você digitou: ", chute )
+
+        try:
+            chuteNumerico = int(chute)
+        except ValueError:
+            print("Digite um número inteiro.")
+            continue
+
+        totaldetentativas -= 1
+        if chuteNumerico == numerosecreto:
+            print("Parabéns! Você acertou e fez um total de", pontos, "pontos.")
+            break
+
+        if chuteNumerico > numerosecreto:
+            print("Você errou! O seu chute foi maior que o número secreto.")
+        else:
+            print("Você errou! O seu chute foi menor que o número secreto.")
+
+        pontos -= abs(numerosecreto - chuteNumerico)
+
+    else:
+        print("Você não tem mais tentativas. O número era", numerosecreto)
+
+    print("Fim do jogo")
+
+if __name__ == "__main__":
+    jogar()

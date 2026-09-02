@@ -1,4 +1,14 @@
-#def jogar():
+import importlib.machinery
+from pathlib import Path
+import random
+
+
+desenhos = importlib.machinery.SourceFileLoader(
+    "desenhos", str(Path(__file__).with_name("desenhos.txt"))
+).load_module()
+
+
+def jogar():
     # Jogo da forca
     print("********************************")
     print("Bem vindo ao jogo da Forca")
@@ -7,9 +17,16 @@
     # Lendo arquivo de palavras
     palavras = []
 
-    with open("palavras.txt", "r") as arquivo:
+    caminho_palavras = Path(__file__).with_name("palavras.txt")
+    with caminho_palavras.open("r", encoding="utf-8") as arquivo:
         for linha in arquivo:
-            palavras.append(linha.strip().upper())
+            palavra = linha.strip().upper()
+            if palavra:
+                palavras.append(palavra)
+
+    if not palavras:
+        print("Nenhuma palavra foi cadastrada.")
+        return
 
     numero = random.randrange(0, len(palavras))
 
@@ -24,12 +41,20 @@
 
     print("A palavra secreta tem {} letras".format(len(palavrasecreta)))
     print(letrasacertadas)
-    desenhar_forca(tentativas)
+    desenhos.desenhar_forca(tentativas)
    
     # Loop principal do jogo
     while(not enforcou and not acertou and tentativas < total_tentativas):
-        chute = input("Digite uma letra? ")
+        try:
+            chute = input("Digite uma letra? ")
+        except EOFError:
+            print("\nJogo interrompido.")
+            return
         chute = chute.strip().upper()
+
+        if len(chute) != 1 or not chute.isalpha():
+            print("Digite apenas uma letra.")
+            continue
 
         if (chute in palavrasecreta):
             index = 0
@@ -40,7 +65,7 @@
                 index = index + 1
         else:
             tentativas += 1
-            desenhar_forca(tentativas)
+            desenhos.desenhar_forca(tentativas)
 
         enforcou = tentativas == total_tentativas
         acertou = "_" not in letrasacertadas
@@ -49,9 +74,9 @@
 
         # Verifica se o jogador ganhou ou perdeu
         if acertou:
-            mensagem_vencedor()
+            desenhos.mensagem_vencedor()
         elif enforcou:
-            mensagem_perdedor(palavrasecreta)
+            desenhos.mensagem_perdedor(palavrasecreta)
 
     print("Fim do jogo")
 if __name__ == "__main__":
